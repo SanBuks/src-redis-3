@@ -245,3 +245,19 @@ install: all
 	$(REDIS_INSTALL) $(REDIS_CLI_NAME) $(INSTALL_BIN)
 	$(REDIS_INSTALL) $(REDIS_CHECK_DUMP_NAME) $(INSTALL_BIN)
 	$(REDIS_INSTALL) $(REDIS_CHECK_AOF_NAME) $(INSTALL_BIN)
+
+### ===========================
+
+# 自定义调试目标：sds 测试
+MYTEST_NAME = mtest_sds
+MYTEST_OBJ = ../mytest/mtest_sds.o sds.o zmalloc.o
+
+mytest: $(MYTEST_NAME)
+
+$(MYTEST_NAME): $(MYTEST_OBJ)
+	$(REDIS_LD) -o $@ $^ $(FINAL_LIBS)
+
+mtest_sds.o: ../mytest/mtest_sds.c
+	$(REDIS_CC) -I. -c $< -o ../mytest/mtest_sds.o
+
+.PHONY: mytest
